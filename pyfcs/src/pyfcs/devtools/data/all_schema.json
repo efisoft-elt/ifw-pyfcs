@@ -1,0 +1,646 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "FCF schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "device identifier."
+      },
+      "param": {
+        "$ref": "#/definitions/param"
+      }
+    }
+  },
+  "definitions": {
+    "param": {
+      "type": "object",
+      "properties": {
+        "shutter": {
+          "$ref": "#/definitions/shutter"
+        },
+        "actuator": {
+          "$ref": "#/definitions/actuator"
+        },
+        "lamp": {
+          "$ref": "#/definitions/lamp"
+        },
+        "motor": {
+          "$ref": "#/definitions/motor"
+        },
+        "drot": {
+          "$ref": "#/definitions/drot"
+        },
+        "adc": {
+          "$ref": "#/definitions/adc"
+        },
+        "piezo": {
+          "$ref": "#/definitions/piezo"
+        },
+        "iodev": {
+          "$ref": "#/definitions/iodev"
+        }
+      },
+      "oneOf": [
+                { "required":
+                     [ "shutter" ] },
+                { "required":
+                     [ "actuator" ] },
+                { "required":
+                     [ "lamp" ] },
+                { "required":
+                     [ "motor" ] },
+                { "required":
+                     [ "drot" ] },
+                { "required":
+                     [ "adc" ] },
+                { "required":
+                     [ "piezo" ] },
+                { "required":
+                     [ "iodev" ] }
+                ]
+    },
+    "shutter": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["OPEN", "CLOSE"],
+          "description": "Shutter action."
+        }
+      },
+       "required": ["action"],
+       "additionalProperties": false
+    },
+     "actuator": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["ON", "OFF"],
+          "description": "Actuator action."
+        }
+      },
+       "required": ["action"],
+       "additionalProperties": false
+    },
+    "lamp": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["ON", "OFF"],
+          "description": "Lamp action."
+        },
+        "intensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Lamp intensity."
+        },
+        "time": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Lamp timer."
+        }
+      },
+      "required": ["action"],
+      "additionalProperties": false, 
+      "allOf": [
+                {
+                   "if": {
+                            "properties": {
+                             "action": { "const": "ON"}
+                            }
+                          },
+                   "then": {
+                            "required": ["intensity", "time"],
+                            "maxProperties": 3
+                          }
+                }
+     ]
+
+    },
+    "motor": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["MOVE_ABS", "MOVE_REL", "MOVE_BY_NAME", "MOVE_BY_SPEED"],
+          "description": "Motor action."
+        },
+        "pos": {
+          "type": "number",
+          "description": "Motor position in user units."
+        },
+        "enc": {
+          "type": "integer",
+          "description": "Motor position in encoders."
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["UU", "ENC"],
+          "description": "Motor position unit."
+        },
+        "name": {
+          "type": "string",
+          "description": "Motor named position."
+        },
+        "speed": {
+          "type": "number",
+          "description": "Motor speed."
+        }
+      },
+      "allOf": [
+                {
+                   "if": {
+                            "properties": {
+                              "unit": { "const": "UU" },
+                              "action": { "const": "MOVE_ABS"}
+                            }
+                          },
+                   "then": {
+                            "required": ["pos"],
+                            "maxProperties": 3
+                          }
+                },
+                {
+                    "if": {
+                            "properties": {
+                              "unit": { "const": "ENC"},
+                              "action": {"const": "MOVE_ABS"}
+                            }
+                          },
+                          "then": {
+                            "required": ["enc"],
+                            "maxProperties": 3
+                          }
+                },
+                {
+                   "if": {
+                            "properties": {
+                              "unit": { "const": "UU" },
+                              "action": { "const": "MOVE_REL"}
+                            }
+                          },
+                   "then": {
+                            "required": ["pos"],
+                            "maxProperties": 3
+                          }
+                },
+                {
+                    "if": {
+                            "properties": {
+                              "unit": { "const": "ENC"},
+                              "action": {"const": "MOVE_REL"}
+                            }
+                          },
+                          "then": {
+                            "required": ["enc"],
+                            "maxProperties": 3
+                          }
+                },
+                {
+                  "if": {
+                         "properties": { "action": { "const": "MOVE_ABS" } }
+                        },
+                  "then": {
+                         "required": ["unit"],
+                         "minProperties": 3, "maxProperties": 3
+
+                        }
+                  },
+                {
+                  "if": {
+                         "properties": { "action": { "const": "MOVE_REL" } }
+                        },
+                  "then": {
+                         "required": ["unit"],
+                         "minProperties": 3, "maxProperties": 3
+
+                        }
+                  },
+                {
+                  "if": {
+                         "properties": { "action": { "const": "MOVE_BY_SPEED" } }
+                        },
+                  "then": {
+                         "required": ["speed"],
+                         "maxProperties": 2
+                        }
+                },
+                {
+                  "if": {
+                         "properties": { "action": { "const": "MOVE_BY_NAME" } }
+                        },
+                  "then": {
+                         "required": ["name"],
+                         "maxProperties": 2
+                      }
+                  }
+               ],
+      "required": ["action"],
+      "additionalProperties": false
+    },
+    "drot": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["MOVE_ABS", "MOVE_REL", "MOVE_BY_NAME", "MOVE_BY_SPEED", "MOVE_BY_POSANG", "START_TRACK", "TRACK_OFFSET", "STOP_TRACK"],
+          "description": "Drot action."
+        },
+        "pos": {
+          "type": "number",
+          "description": "Motor position in user units."
+        },
+        "enc": {
+          "type": "integer",
+          "description": "Motor position in encoders."
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["UU", "ENC"],
+          "description": "Motor position unit."
+        },
+        "name": {
+          "type": "string",
+          "description": "Motor named position."
+        },
+        "speed": {
+          "type": "number",
+          "description": "Motor speed."
+        },
+        "posang": {
+          "type": "number",
+          "description": "Drot position angle."
+        },
+        "offset": {
+          "type": "number",
+          "description": "Drot tracking offset."
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["ENG", "STAT", "SKY", "ELEV", "USER"],
+          "description": "Drot mode."
+        }
+      },
+      "allOf": [
+            {
+               "if": {
+                        "properties": {
+                          "unit": { "const": "UU" },
+                          "action": { "const": "MOVE_ABS"}
+                        }
+                      },
+               "then": {
+                        "required": ["pos"],
+                        "maxProperties": 3
+                      }
+            },
+            {
+                "if": {
+                        "properties": {
+                          "unit": { "const": "ENC"},
+                          "action": {"const": "MOVE_ABS"}
+                        }
+                      },
+                      "then": {
+                        "required": ["enc"],
+                        "maxProperties": 3
+                      }
+            },
+            {
+               "if": {
+                        "properties": {
+                          "unit": { "const": "UU" },
+                          "action": { "const": "MOVE_REL"}
+                        }
+                      },
+               "then": {
+                        "required": ["pos"],
+                        "maxProperties": 3
+                      }
+            },
+            {
+                "if": {
+                        "properties": {
+                          "unit": { "const": "ENC"},
+                          "action": {"const": "MOVE_REL"}
+                        }
+                      },
+                      "then": {
+                        "required": ["enc"],
+                        "maxProperties": 3
+                      }
+            },
+            {
+              "if": {
+                     "properties": { "action": { "const": "MOVE_ABS" } }
+                    },
+              "then": {
+                     "required": ["unit"],
+                     "maxProperties": 3, "minProperties":3 
+                    }
+              },
+            {
+              "if": {
+                     "properties": { "action": { "const": "MOVE_REL" } }
+                    },
+              "then": {
+                     "required": ["unit"],
+                     "maxProperties": 3,  "minProperties":3 
+
+                    }
+              },
+            {
+            "if": {
+                   "properties": { "action": { "const": "MOVE_BY_SPEED" } }
+                  },
+            "then": {
+                   "required": ["speed"],
+                   "maxProperties": 2
+                  }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "MOVE_BY_NAME" } }
+                  },
+            "then": {
+                   "required": ["name"],
+                   "maxProperties": 2
+                }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "MOVE_BY_POSANG" } }
+                  },
+            "then": {
+                   "required": ["posang"],
+                   "maxProperties": 3
+                }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "START_TRACK" } }
+                  },
+            "then": {
+                  "required": ["posang", "mode"],
+                  "maxProperties": 3
+               }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "STOP_TRACK" } }
+                  },
+            "then": {
+                  "maxProperties": 1
+               }
+            },
+            {
+             "if": {
+                   "properties": { "action": { "const": "TRACK_OFFSET" } }
+                  },
+            "then": {
+                  "required": ["offset"],
+                  "maxProperties": 2
+             }
+            }
+         ],
+      "required": ["action"],
+      "additionalProperties": false
+    },
+    "adc": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["MOVE_ABS", "MOVE_REL", "MOVE_BY_NAME", "MOVE_BY_SPEED", "MOVE_BY_POSANG", "START_TRACK", "STOP_TRACK"],
+          "description": "Adc action."
+        },
+        "pos": {
+          "type": "number",
+          "description": "Motor position in user units."
+        },
+        "enc": {
+          "type": "integer",
+          "description": "Motor position in encoders."
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["UU", "ENC"],
+          "description": "Motor position unit."
+        },
+        "name": {
+          "type": "string",
+          "description": "Motor named position."
+        },
+        "speed": {
+          "type": "number",
+          "description": "Motor speed."
+        },
+        "posang": {
+          "type": "number",
+          "description": "Motor position angle."
+        },
+        "axis": {
+          "type": "string",
+          "enum": ["ADC1", "ADC2"],
+          "description": "Adc axis."
+        },
+         "mode": {
+          "type": "string",
+          "enum": ["ENG", "OFF", "AUTO"],
+          "description": "Adc mode."
+        }
+      },
+      "allOf": [
+            {
+               "if": {
+                        "properties": {
+                          "unit": { "const": "UU" },
+                          "action": { "const": "MOVE_ABS"}
+                        }
+                      },
+               "then": {
+                        "required": ["pos", "axis"],
+                        "maxProperties": 4
+                      }
+            },
+            {
+                "if": {
+                        "properties": {
+                          "unit": { "const": "ENC"},
+                          "action": {"const": "MOVE_ABS"}
+                        }
+                      },
+                      "then": {
+                        "required": ["enc", "axis"],
+                        "maxProperties": 4
+                      }
+            },
+            {
+               "if": {
+                        "properties": {
+                          "unit": { "const": "UU" },
+                          "action": { "const": "MOVE_REL"}
+                        }
+                      },
+               "then": {
+                        "required": ["pos", "axis"],
+                        "maxProperties": 4
+                      }
+            },
+            {
+                "if": {
+                        "properties": {
+                          "unit": { "const": "ENC"},
+                          "action": {"const": "MOVE_REL"}
+                        }
+                      },
+                      "then": {
+                        "required": ["enc", "axis"],
+                        "maxProperties": 4
+                      }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "MOVE_ABS" } }
+                  },
+            "then": {
+                   "required": ["axis", "unit"],
+                   "minProperties": 4
+                  }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "MOVE_REL" } }
+                  },
+            "then": {
+                   "required": ["axis", "unit"],
+                   "minProperties": 4
+                  }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "MOVE_BY_SPEED" } }
+                  },
+            "then": {
+                   "required": ["speed", "axis"],
+                   "maxProperties": 3
+                  }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "MOVE_BY_NAME" } }
+                  },
+            "then": {
+                   "required": ["name", "axis"],
+                   "maxProperties": 3
+                }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "MOVE_BY_POSANG" } }
+                  },
+            "then": {
+                   "required": ["posang"],
+                   "maxProperties": 3
+                }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "START_TRACK" } }
+                  },
+            "then": {
+                  "required": ["posang"],
+                  "maxProperties": 2
+               }
+            },
+            {
+            "if": {
+                   "properties": { "action": { "const": "STOP_TRACK" } }
+                  },
+            "then": {
+                  "maxProperties": 1
+               }
+            }
+         ],
+      "required": ["action"],
+      "additionalProperties": false
+    },
+    "piezo": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["SET_AUTO", "SET_POS", "SET_HOME", "MOVE_ALL_BITS", "MOVE_ALL_POS"],
+          "description": "Piezo action."
+        },
+        "pos1": {
+          "type": "number",
+          "description": "Piezo position 1 in volts."
+        },
+        "pos2": {
+          "type": "number",
+          "description": "Piezo position 2 in volts."
+        },
+        "pos3": {
+          "type": "number",
+          "description": "Piezo position 3 in volts."
+        },
+        "bit1": {
+          "type": "integer",
+          "description": "Piezo position 1 in bits."
+        },
+        "bit2": {
+          "type": "integer",
+          "description": "Piezo position 2 in bits."
+        },
+        "bit3": {
+          "type": "integer",
+          "description": "Piezo position 3 in bits."
+        }
+      },
+      "required": ["action"],
+      "additionalProperties": false
+    },
+    "iodev": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["SETOUT"],
+          "description": "IODev action."
+           },
+         "channels": {
+             "type": "array",
+              "items": {
+                 "type": "object",
+                 "properties": {
+                    "name": {
+                        "name": "string"
+                      },
+                     "signal": {
+                         "type": "string",
+                         "enum": ["DIGITAL","ANALOG", "INTEGER"],
+                         "description": "Signal type."
+                     },
+                    "value": {
+                        "type": ["boolean","integer","number"]
+                      }
+                    },
+                 "required": ["name","value"],
+                "additionalProperties": false
+                }
+            }
+         },
+      "required": ["action"],
+      "additionalProperties": false
+    }
+  }
+}
+

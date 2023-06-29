@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+     "drot": {
+       "allOf": [{ "$ref": "./motor_schema.json#/definitions/motor" }],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["MOVE_ABS", "MOVE_REL", "MOVE_BY_NAME", "MOVE_BY_SPEED", "MOVE_BY_POSANG", "START_TRACK", "STOP_TRACK"],
+          "description": "Drot action."
+        },
+        "posang": {
+          "type": "number",
+          "description": "Motor position angle."
+        },
+         "mode": {
+          "type": "string",
+          "enum": ["ENG", "STAT", "SKY", "ELEV", "USER"],
+          "description": "Drot mode."
+        }
+      },
+      "required": ["action","mode"]
+    }
+  }
+}

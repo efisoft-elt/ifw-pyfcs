@@ -1,0 +1,19 @@
+
+"""
+@file
+@copyright EFISOFT  
+
+@defgroup morfeo
+@brief Package for a better fcs client  
+"""
+
+import os
+
+from wtools.module import declare_pypackage
+
+
+declare_pypackage(target='pyfcs',
+                  use='', features='radgen')
+
+
+

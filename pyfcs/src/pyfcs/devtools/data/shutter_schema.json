@@ -1,0 +1,16 @@
+{
+  "$id": "shutter_schema.json",
+  "definitions": {
+    "shutter": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["OPEN", "CLOSE"],
+          "description": "Shutter action."
+        }
+      },
+       "required": ["action"]
+    }
+  }
+}

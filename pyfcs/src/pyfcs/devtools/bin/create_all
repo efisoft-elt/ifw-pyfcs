@@ -1,0 +1,13 @@
+# !/bin/sh 
+
+# not good for production 
+python devtools/create_device.py motor devtools/data/all_schema.json > devices/motor.py
+python devtools/create_device.py piezo devtools/data/all_schema.json > devices/piezo.py
+python devtools/create_device.py shutter devtools/data/all_schema.json > devices/shutter.py
+python devtools/create_device.py adc devtools/data/all_schema.json > devices/adc.py
+python devtools/create_device.py drot devtools/data/all_schema.json > devices/drot.py
+python devtools/create_device.py actuator devtools/data/all_schema.json > devices/actuator.py
+python devtools/create_device.py lamp devtools/data/all_schema.json > devices/lamp.py
+
+
+

@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+      "adc": {
+      "allOf": [{ "$ref": "./motor_schema.json#/definitions/motor" }],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["MOVE_ABS", "MOVE_REL", "MOVE_BY_NAME", "MOVE_BY_SPEED", "MOVE_BY_POSANG", "START_TRACK", "STOP_TRACK"],
+          "description": "Adc action."
+        },
+        "posang": {
+          "type": "number",
+          "description": "Motor position angle."
+        },
+        "axis": {
+          "type": "string",
+          "enum": ["ADC1", "ADC2"],
+          "description": "Adc axis."
+        },
+         "mode": {
+          "type": "string",
+          "enum": ["ENG", "OFF", "AUTO"],
+          "description": "Adc mode."
+        }
+      },
+      "required": ["action","mode"]
+    }
+  }
+}

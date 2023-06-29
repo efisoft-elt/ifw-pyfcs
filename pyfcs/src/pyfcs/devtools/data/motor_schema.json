@@ -1,0 +1,126 @@
+{
+"definitions": { 
+  "motor": {
+   
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["MOVE_ABS", "MOVE_REL", "MOVE_BY_NAME", "MOVE_BY_SPEED"],
+        "description": "Motor action."
+      },
+      "pos": {
+        "type": "number",
+        "description": "Motor position in user units."
+      },
+      "enc": {
+        "type": "integer",
+        "description": "Motor position in encoders."
+      },
+      "unit": {
+        "type": "string",
+        "enum": ["UU", "ENC"],
+        "description": "Motor position unit."
+      },
+      "name": {
+        "type": "string",
+        "description": "Motor named position."
+      },
+      "speed": {
+        "type": "number",
+        "description": "Motor speed."
+      }
+    },
+    "allOf": [
+              {
+                 "if": {
+                          "properties": {
+                            "unit": { "const": "UU" },
+                            "action": { "const": "MOVE_ABS"}
+                          }
+                        },
+                 "then": {
+                          "required": ["pos"],
+                          "maxProperties": 3
+                        }
+              },
+              {
+                  "if": {
+                          "properties": {
+                            "unit": { "const": "ENC"},
+                            "action": {"const": "MOVE_ABS"}
+                          }
+                        },
+                        "then": {
+                          "required": ["enc"],
+                          "maxProperties": 3
+                        }
+              },
+              {
+                 "if": {
+                          "properties": {
+                            "unit": { "const": "UU" },
+                            "action": { "const": "MOVE_REL"}
+                          }
+                        },
+                 "then": {
+                          "required": ["pos"],
+                          "maxProperties": 3
+                        }
+              },
+              {
+                  "if": {
+                          "properties": {
+                            "unit": { "const": "ENC"},
+                            "action": {"const": "MOVE_REL"}
+                          }
+                        },
+                        "then": {
+                          "required": ["enc"],
+                          "maxProperties": 3
+                        }
+              },
+              {
+                "if": {
+                       "properties": { "action": { "const": "MOVE_ABS" } }
+                      },
+                "then": {
+                       "required": ["unit"],
+                       "maxProperties": 3
+                      }
+                },
+              {
+                "if": {
+                       "properties": { "action": { "const": "MOVE_REL" } }
+                      },
+                "then": {
+                       "required": ["unit"],
+                       "maxProperties": 3
+                      }
+                },
+              {
+                "if": {
+                       "properties": { "action": { "const": "MOVE_BY_SPEED" } }
+                      },
+                "then": {
+                       "required": ["speed"],
+                       "maxProperties": 2
+                      }
+              },
+              {
+                "if": {
+                       "properties": { "action": { "const": "MOVE_BY_NAME" } }
+                      },
+                "then": {
+                       "required": ["name"],
+                       "maxProperties": 2
+                    }
+                }
+             ],
+    "required": ["action"],
+    "additionalProperties": false
+
+    }
+  }
+
+}

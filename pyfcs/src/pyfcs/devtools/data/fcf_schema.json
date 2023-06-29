@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "FCF schema",
+  "type": "array",
+  "items": {
+       "type": "object",
+        "patternProperties": {
+            "^fcs\\.shutter:.*":  {"$ref": "#/definitions/shutter"},
+            "^fcs\\.lamp:.*":  {"$ref": "#/definitions/lamp"},
+            "^fcs\\.actuator:.*":  {"$ref": "#/definitions/actuator"},
+            "^fcs\\.motor:.*": {"$ref": "#/definitions/motor"},
+            "^fcs\\.drot:.*":  {"$ref": "#/definitions/drot"},
+            "^fcs\\.adc:.*":   {"$ref": "#/definitions/adc"},
+            "^fcs\\.piezo:.*": {"$ref": "#/definitions/piezo"}
+    },
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+      "piezo": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["SET_AUTO", "SET_POS", "SET_HOME", "MOVE_ALL_BITS", "MOVE_ALL_POS"],
+          "description": "Piezo action."
+        },
+        "pos1": {
+          "type": "number",
+          "description": "Piezo position 1 in volts."
+        },
+        "pos2": {
+          "type": "number",
+          "description": "Piezo position 2 in volts."
+        },
+        "pos3": {
+          "type": "number",
+          "description": "Piezo position 3 in volts."
+        },
+        "bit1": {
+          "type": "integer",
+          "description": "Piezo position 1 in bits."
+        },
+        "bit2": {
+          "type": "integer",
+          "description": "Piezo position 2 in bits."
+        },
+        "bit3": {
+          "type": "integer",
+          "description": "Piezo position 3 in bits."
+        }
+      },
+      "required": ["action"]
+    }
+  }
+}
